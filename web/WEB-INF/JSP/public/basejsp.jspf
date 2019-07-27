@@ -19,6 +19,7 @@
   <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/style/blue/pageCommon.css" />
   <script type="text/javascript">
   </script>
+  
 </head>
 
 </html>
