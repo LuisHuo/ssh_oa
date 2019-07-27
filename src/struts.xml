@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+    <!--配置为开发模式-->
+    <constant name="struts.devMode" value="true"/>
+    <constant name="struts.action.extension" value="action"/>
+    <constant name="struts.ui.theme" value="simple"/>
+
+    <package name="default" namespace="/" extends="struts-default" strict-method-invocation="false">
+        <interceptors>
+            <!--声明拦截器-->
+            <interceptor name="checkPrivilege" class="com.hhl.oa.Util.CheckPrivilegeInterceptor"/>
+            <!--重新定义默认拦截器-->
+            <interceptor-stack name="defaultStack">
+                <interceptor-ref name="checkPrivilege"/>
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+        </interceptors>
+        <!--配置全局的action，方便拦截器使用-->
+        <global-results>
+            <result name="loginUI">/WEB-INF/JSP/user/loginUI.jsp</result>
+            <result name="noPrivilege">/noPrivilege.jsp</result>
+        </global-results>
+        <action name="role_*" class="roleAction" method="{1}">
+            <result name="list">/WEB-INF/JSP/role/list.jsp</result>
+            <result name="toList" type="redirectAction">role_list</result>
+            <result name="addUI">/WEB-INF/JSP/role/addUI.jsp</result>
+            <result name="editUI">/WEB-INF/JSP/role/editUI.jsp</result>
+            <result name="setPrivilegeUI">/WEB-INF/JSP/role/setPrivilegeUI.jsp</result>
+        </action>
+
+        <action name="department_*" class="departmentAction" method="{1}">
+            <result name="list">/WEB-INF/JSP/department/list.jsp</result>
+            <result name="toList" type="redirectAction">department_list?parentId=%{parentId}</result>
+            <result name="saveUI">/WEB-INF/JSP/department/saveUI.jsp</result>
+        </action>
+
+        <action name="forumManage_*" class="forumManageAction" method="{1}">
+            <result name="list">/WEB-INF/JSP/forumManage/list.jsp</result>
+            <result name="toList" type="redirectAction">forumManage_list</result>
+            <result name="saveUI">/WEB-INF/JSP/forumManage/saveUI.jsp</result>
+        </action>
+
+        <action name="user_*" class="userAction" method="{1}">
+            <result name="list">/WEB-INF/JSP/user/list.jsp</result>
+            <result name="toList" type="redirectAction">user_list</result>
+            <result name="saveUI">/WEB-INF/JSP/user/saveUI.jsp</result>
+            <result name="toIndex" type="redirect">/index.jsp</result>
+            <result name="logout">/WEB-INF/JSP/user/logout.jsp</result>
+        </action>
+
+        <action name="home_*" class="homeAction" method="{1}">
+            <result name="index">/WEB-INF/JSP/home/index.jsp</result>
+            <result name="top">/WEB-INF/JSP/home/top.jsp</result>
+            <result name="bottom">/WEB-INF/JSP/home/bottom.jsp</result>
+            <result name="left">/WEB-INF/JSP/home/left.jsp</result>
+            <result name="right">/WEB-INF/JSP/home/right.jsp</result>
+        </action>
+    </package>
+
+</struts>

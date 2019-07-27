@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<context:component-scan base-package="com.hhl"/>
+	<!--引入外部文件-->
+	<context:property-placeholder location="classpath*:jdbc.properties"/>
+
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="configLocation" value="classpath:hibernate.cfg.xml"/>
+		<property name="dataSource">
+			<bean class="com.mchange.v2.c3p0.ComboPooledDataSource">
+				<property name="driverClass" value="${jdbc.driver}"/>
+				<property name="jdbcUrl" value="${jdbc.url}"/>
+				<property name="user" value="${jdbc.user}"/>
+				<property name="password" value="${jdbc.password}"/>
+				<!--初始化时获取3个链接,取值应在minPoolSize和maxPoolSize之间-->
+				<property name="initialPoolSize" value="3"/>
+				<!--链接池中保留的最小链接数-->
+				<property name="minPoolSize" value="3"/>
+				<!--最大链接数-->
+				<property name="maxPoolSize" value="15"/>
+				<!--当连接池中的连接耗尽c3p0一次同时获取的连接数-->
+				<property name="acquireIncrement" value="3"/>
+				<!--控制数据源内加载prepareStatements数量，如果maxStatements和maxStatementsPerConnection均为0则缓存关闭-->
+				<property name="maxStatements" value="8"/>
+				<!--maxStatementsPerConnection定义了连接池内单个连接所拥有的最大缓存Statements数-->
+				<property name="maxStatementsPerConnection" value="5"/>
+				<!--最大空闲时间，1800秒内未使用则被丢弃，若为0，则永不丢弃-->
+				<property name="maxIdleTime" value="1800"/>
+			</bean>
+		</property>
+	</bean>
+
+	<!--配置声明事务管理（采用注解的方式）-->
+	<bean id="txManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<tx:annotation-driven transaction-manager="txManager"/>
+
+</beans>

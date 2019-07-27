@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+  ~ Hibernate, Relational Persistence for Idiomatic Java
+  ~
+  ~ License: GNU Lesser General Public License (LGPL), version 2.1 or later.
+  ~ See the lgpl.txt file in the root directory or <http://www.gnu.org/licenses/lgpl-2.1.html>.
+  -->
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.hhl.oa">
+    <class name="com.hhl.oa.domian.User" table="t_user">
+        <id name="id">
+            <generator class="native"/>
+        </id>
+        <property name="name"/>
+        <property name="description"/>
+        <property name="email"/>
+        <property name="loginName" unique="true"/>
+        <property name="password"/>
+        <property name="phoneNumber"/>
+        <property name="gender"/>
+
+        <many-to-one name="department" class="com.hhl.oa.domian.Department" column="department_id"/>
+
+        <set name="roles" table="t_user_role" lazy="false">
+            <key column="user_id"></key>
+            <many-to-many class="com.hhl.oa.domian.Role" column="role_id"/>
+        </set>
+    </class>
+</hibernate-mapping>
